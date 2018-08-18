@@ -1,28 +1,22 @@
 <template>
-  <Instance class="instance--station" :backgrounds="
+  <Instance class="instance--station-detail" :backgrounds="
     [
-      { name: 'station-stars', speed: '0' },
-      { name: 'station-earth', speed: '2' }
+      { name: 'station-detail-stars', speed: '0' },
+      { name: 'station-detail-earth', speed: '2' }
     ]
   ">
-    <AddUnit></AddUnit>
-
-    <Unit :unit="unit" v-for="unit in units" @click.native="openStationDetail($event)"></Unit>
-
-    <AddUnit></AddUnit>
+    <UnitDetail :unit="unit" v-for="unit in units" @click.native="openStation()"></UnitDetail>
   </Instance>
 </template>
 
 <script>
   import Instance from "../instance"
-  import Unit from "../entities/unit"
-  import AddUnit from "../interface/add_unit"
+  import UnitDetail from "../entities/unit_detail"
 
   export default {
     components: {
       Instance,
-      Unit,
-      AddUnit
+      UnitDetail
     },
     data: function () {
       return {
@@ -56,26 +50,26 @@
       }
     },
     methods: {
-      openStationDetail: function(e) {
-        this.$parent._data.activeInstance = "stationDetail"
+      openStation: function() {
+        this.$parent._data.activeInstance = "station"
       }
     }
   }
 </script>
 
 <style lang="scss">
-  .instance--station {
+  .instance--station-detail {
     display: grid;
     grid-auto-columns: auto;
     grid-auto-rows: auto;
     padding: 100px 100px;
     place-items: center;
 
-    .instance__background--station-stars {
+    .instance__background--station-detail-stars {
       background: url("https://s6.postimg.cc/unjz87dz5/grd.png");
     }
 
-    .instance__background--station-earth {
+    .instance__background--station-detail-earth {
       left: 70vw;
       top: 20vh;
       height: 200px;

@@ -15,8 +15,8 @@
 </script>
 
 <style lang="scss" scoped>
-  $unit-height: 100px;
-  $unit-width: 50px;
+  $unit-height: 400px;
+  $unit-width: 200px;
 
   .unit-wrapper {
     display: flex;

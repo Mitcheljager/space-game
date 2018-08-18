@@ -1,12 +1,10 @@
 <template>
   <section class="instance" @mousedown="initiateDrag($event)" @mouseup="endDrag()" @mousemove="moveDrag($event)">
-    <div class="instance__content" :style="`transform: translateY(${elementPositionY}px) transform: translateX(${elementPositionX}px)`">
+    <div class="instance__content" :style="transform.position">
       <slot></slot>
     </div>
 
-    <div :instance-parallax-background="background.speed" :class="['instance__background', `instance__background--${background.name}`]" v-for="background in backgrounds">
-
-    </div>
+    <div :instance-parallax-background="background.speed" :class="['instance__background', `instance__background--${background.name}`]" v-for="background in backgrounds"></div>
   </section>
 </template>
 
@@ -19,20 +17,29 @@
 
         clickedPositionY: 0,
         newPositionY: 0,
-        newPositionY: 0,
         elementPositionY: 0,
 
         clickedPositionX: 0,
         newPositionX: 0,
-        newPositionX: 0,
         elementPositionX: 0
+      }
+    },
+    computed: {
+      transform: function() {
+        return {
+          position: `transform: translateY(${this.elementPositionY}px) translateX(${this.elementPositionX}px)`
+        }
       }
     },
     methods: {
       initiateDrag: function(e) {
         this.currentlyDragging = true
+
         this.clickedPositionY = e.pageY
+        this.newPositionY = this.elementPositionY
+
         this.clickedPositionX = e.pageX
+        this.newPositionX = this.elementPositionX
       },
       endDrag: function() {
         this.currentlyDragging = false
@@ -45,16 +52,14 @@
           const content = element.querySelector(".instance__content")
 
           let mouseChangeY = this.clickedPositionY - e.pageY
-          let newPositionY = this.elementPositionY - mouseChangeY
-          this.newPositionY = newPositionY
+          this.newPositionY = this.elementPositionY - (mouseChangeY * 0.5)
 
           let mouseChangeX = this.clickedPositionX - e.pageX
-          let newPositionX = this.elementPositionX - mouseChangeX
-          this.newPositionX = newPositionX
+          this.newPositionX = this.elementPositionX - (mouseChangeX * 0.5)
 
-          content.style.transform = `translateY(${ newPositionY }px) translateX(${ newPositionX }px)`
+          content.style.transform = `translateY(${ this.newPositionY }px) translateX(${ this.newPositionX }px)`
 
-          this.moveParallax(element, newPositionX, newPositionY)
+          this.moveParallax(element, this.newPositionX, this.newPositionY)
         }
       },
       moveParallax: function(element, x, y) {
@@ -62,7 +67,7 @@
 
         elementsToMove.forEach(function(element) {
           let elementSpeed = element.getAttribute("instance-parallax-background") / 100
-          element.style.transform = `translateY(${ y * elementSpeed * -1 }px) translateX(${ x * elementSpeed * -1 }px)`
+          element.style.transform = `translateY(${ y * elementSpeed }px) translateX(${ x * elementSpeed }px)`
         });
       }
     }
@@ -74,10 +79,11 @@
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    transform: none;
   }
 
   .instance__content {
-    position: relative;
+
   }
 
   .instance__background {

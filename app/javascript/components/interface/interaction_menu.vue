@@ -1,10 +1,6 @@
 <template>
-  <nav :class="['bubble-menu', {'bubble-menu--is-active': isActive}]" @click="toggleState()">
-    <a v-for="item in items" class="bubble-menu__item" ref="AddUnit" @click="pickAction(item.function.name, item.function.argument)">
-      <div class="bubble-menu__item-content">
-        {{ item.name }}
-      </div>
-    </a>
+  <nav :class="['bubble-menu', {'bubble-menu--is-active': isActive}]" @click="toggleState($event)">
+    <slot></slot>
   </nav>
 </template>
 
@@ -17,19 +13,11 @@
       }
     },
     created: function() {
-      console.log(this.items);
     },
     methods: {
-      toggleState: function() {
-        this.isActive = !this.isActive;
-      },
-      pickAction: function(action, argument) {
-        // This is temporary while I think of a better solution.
-
-        if (action == "addUnit") {
-          console.log(this)
-          this.$parent.$options.methods.addUnit(this.$parent.$parent.$parent._data);
-        }
+      toggleState: function(e) {
+        if (e.target.tagName.toLowerCase() == "nav")
+          this.isActive = !this.isActive
       }
     }
   }
@@ -76,7 +64,7 @@
       transition: transform $transition-duration;
     }
 
-    &:active {
+    &:not(.bubble-menu--is-active):active {
       &::after {
         transform: scale(1.2);
         transition-duration: $transition-duration / 3;

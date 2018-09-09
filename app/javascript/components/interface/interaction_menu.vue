@@ -6,27 +6,38 @@
 
 <script>
   export default {
-    props: ["items"],
+    props: ["items", "openOnCreate"],
     data: function() {
       return {
         isActive: false
       }
     },
-    created: function() {
+    mounted: function() {
+      let self = this
+
+      setTimeout(
+        _ => this.isActive = true,
+      10)
     },
     methods: {
       toggleState: function(e) {
         if (e.target.tagName.toLowerCase() == "nav")
-          this.isActive = !this.isActive
+          if (this.openOnCreate) {
+            this.$parent._data.isMenuActive = false
+            this.isActive = !this.isActive
+            console.log(this.$parent)
+          } else {
+            this.isActive = !this.isActive
+          }
       }
     }
   }
 </script>
 
 <style lang="scss">
-  $bubble-size: 50px;
+  $bubble-size: 40px;
   $bubbles-max: 6;
-  $y-offset: 85px;
+  $y-offset: 65px;
   $bubble-spacing: 360 / $bubbles-max;
   $transition-duration: 300ms;
 
@@ -52,6 +63,7 @@
     cursor: pointer;
     animation: bounce $transition-duration;
     animation-delay: $transition-duration / 2;
+    z-index: 10;
 
     &::after {
       display: block;

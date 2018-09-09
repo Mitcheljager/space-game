@@ -35,8 +35,6 @@
               }
             ]
           },
-          { id: "281hndaa", type: "windows" },
-          { id: "281hndaa", type: "windows" },
           { id: "281hndaa", type: "standard" },
           { id: "281hndaa", type: "standard" },
           { id: "pejkm291", type: "standard",

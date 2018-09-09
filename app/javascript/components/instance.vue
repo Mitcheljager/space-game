@@ -1,5 +1,7 @@
 <template>
   <section class="instance" @mousedown="initiateDrag($event)" @mouseup="endDrag()" @mousemove="moveDrag($event)">
+    <slot name="interface"></slot>
+    
     <div class="instance__content" :style="transform.position">
       <slot></slot>
     </div>

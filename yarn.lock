@@ -2628,6 +2628,10 @@ ignore-walk@^3.0.1:
   dependencies:
     minimatch "^3.0.4"
 
+impetus@^0.8.7:
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/impetus/-/impetus-0.8.7.tgz#59521c25633911e9cbc509317679f0f0b88d92e8"
+
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"

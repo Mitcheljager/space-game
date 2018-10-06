@@ -66,7 +66,7 @@
     width: $unit-width;
     padding: 5px;
     font-size: 12px;
-    border: 1px solid grey;
+    box-shadow: inset 0 0 0 1px gray;
     background: lightgrey;
     z-index: -1;
   }

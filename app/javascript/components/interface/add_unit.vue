@@ -1,25 +1,25 @@
 <template>
   <div class="add-unit" :style="`left: ${ positionX }px; top: ${ positionY }px`" v-if="isActive">
-    <div class="add-unit__menu" menu="add-unit" v-if="isMenuActive">
-      <a v-for="unitType in unitTypes" class="add-unit__item" @click="addUnit($event)">
-        {{ unitType }}
+    <div class="add-unit__menu" menu="add-unit" v-if="isMenuActive == 'module'">
+      <a v-for="unitType in unitTypes" class="add-unit__item" @click="addUnit($event, unitType.type)">
+        {{ unitType.type }}
       </a>
     </div>
 
     <InteractionMenu :openOnCreate="true">
-      <a class="bubble-menu__item" ref="AddUnit" @click="toggleAddUnitMenu()">
+      <a class="bubble-menu__item" ref="AddUnit" @click="toggleAddUnitMenu(`module`)">
         <div class="bubble-menu__item-content">
-          Add
+          Module
         </div>
       </a>
 
-      <a class="bubble-menu__item" ref="AddUnit" @click="toggleAddUnitMenu()">
+      <a class="bubble-menu__item" ref="AddUnit" @click="toggleAddUnitMenu(`utility`)">
         <div class="bubble-menu__item-content">
           Utility
         </div>
       </a>
 
-      <a class="bubble-menu__item" ref="AddUnit" @click="toggleAddUnitMenu()">
+      <a class="bubble-menu__item" ref="AddUnit" @click="toggleAddUnitMenu(`special`)">
         <div class="bubble-menu__item-content">
           Special
         </div>
@@ -37,7 +37,19 @@
     },
     data: function() {
       return {
-        unitTypes: ["Standard", "Windows", "Reinforced"],
+        markerOrder: ["top", "right", "bottom", "left"],
+        unitTypes: [
+          { type: "standard", markers: ["top", "bottom"] },
+          { type: "cooled", markers: ["top", "bottom"] },
+          { type: "dock", markers: ["bottom"] },
+          { type: "engine", markers: ["top"] },
+          { type: "fuel", markers: ["top", "bottom"] },
+          { type: "node", markers: ["top", "bottom", "left", "right"] },
+          { type: "reinforced", markers: ["top", "bottom"] },
+          { type: "storage", markers: ["top", "bottom"] },
+          { type: "solar_array_large", markers: [] },
+          { type: "windows", markers: ["top", "bottom"] }
+        ],
         isActive: false,
         isMenuActive: false,
         positionX: 0,
@@ -54,8 +66,12 @@
       // this.$parent.$parent.$parent.$el.removeEventListener("click", this.setAddUnitMenu)
     },
     methods: {
-      toggleAddUnitMenu: function() {
-        this.isMenuActive = !this.isMenuActive
+      toggleAddUnitMenu: function(menuName = "") {
+        if (menuName == this.isMenuActive) {
+          this.isMenuActive = ""
+        } else {
+          this.isMenuActive = menuName
+        }
       },
       setAddUnitMenu: function(e) {
         const units = this.$parent.$parent._data.units
@@ -78,20 +94,19 @@
         this.positionX = e.pageX
         this.positionY = e.pageY
       },
-      addUnit: function(e) {
+      addUnit: function(e, unitType) {
         let units = this.$parent.$parent._data.units
-        let newUnit = { id: Math.random().toString(36).substr(2, 8), type: "reinforced" }
+        let newUnit = { id: Math.random().toString(36).substr(2, 8), type: unitType }
 
         if (this.activeUnit.parent_unit) {
-          console.log(this.activeUnit)
           units[this.activeUnit.parent_unit][this.activeUnit.direction].splice(this.activeUnit.unit + 1, 0, newUnit)
-
         } else {
           units.splice(this.activeUnit.unit + 1, 0, newUnit)
         }
 
         this.$children[0]._data.isActive = false
         this.isActive = false
+        this.isMenuActive = false
 
         this.$nextTick( function () {
           this.renderMarkers()
@@ -109,22 +124,24 @@
 
         Array.from(unitElements).forEach((unit) => {
           const component = unit.__vue__
+          const unitType = this.unitTypes.find(item => item.type == component.unit.type)
 
-          if (!component._props.grand_parent_unit) {
+          unitType.markers.forEach((alignment) => {
             let marker = document.createElement("div")
 
             marker.classList.add("add-unit-marker")
             marker.addEventListener("click", this.setAddUnitMenu)
             marker.dataset.unit = component.unit.id
 
-            let alignment = "top"
-            if (component._props.direction)
-              alignment = component._props.direction
+            if (component._props.parent_unit) {
+              let markerIndex = this.markerOrder.findIndex(item => item == alignment) + 1
+              alignment = this.markerOrder[markerIndex]
+            }
 
             marker.classList.add(`add-unit-marker--align-${alignment}`)
 
             component.$el.appendChild(marker)
-          }
+          })
         })
       }
     },
@@ -167,24 +184,35 @@
     background: red;
   }
 
+  $marker-size: 10px;
+
   .add-unit-marker {
     position: absolute;
     width: 100%;
-    height: 10px;
-    background: blue;
+    height: $marker-size;
+    background: rgba(blue, .2);
     top: 0;
     left: 0;
 
     &--align-left {
-      width: 10px;
+      top: 0;
+      width: $marker-size;
       height: 100%;
     }
 
     &--align-right {
+      top: 0;
       left: auto;
       right: 0;
-      width: 10px;
+      width: $marker-size;
       height: 100%;
+    }
+
+    &--align-bottom {
+      top: auto;
+      bottom: 0;
+      width: 100%;
+      height: $marker-size;
     }
   }
 </style>

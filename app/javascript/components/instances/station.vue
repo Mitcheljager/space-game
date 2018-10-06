@@ -133,6 +133,14 @@
     &--right-side {
       position: absolute;
       margin-left: $unit-width;
+
+      .station-wing {
+        @for $i from 1 through 10 {
+          &:nth-child(#{$i}) {
+            z-index: (10 - $i);
+          }
+        }
+      }
     }
 
     &--left-side {

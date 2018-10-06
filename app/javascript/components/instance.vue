@@ -1,7 +1,7 @@
 <template>
-  <section class="instance" @mousedown="initiateDrag($event)" @mouseup="endDrag()" @mousemove="moveDrag($event)">
+  <section class="instance">
     <slot name="interface"></slot>
-    
+
     <div class="instance__content" :style="transform.position">
       <slot></slot>
     </div>
@@ -11,6 +11,8 @@
 </template>
 
 <script>
+  import Impetus from "impetus"
+
   export default {
     props: ["backgrounds"],
     data: function () {
@@ -32,6 +34,17 @@
           position: `transform: translateY(${this.elementPositionY}px) translateX(${this.elementPositionX}px)`
         }
       }
+    },
+    mounted: function() {
+      const self = this
+      new Impetus({
+        update: function (x, y) {
+          self.elementPositionX = x
+          self.elementPositionY = y
+
+          self.moveParallax(self.$el, x, y)
+        }
+      });
     },
     methods: {
       initiateDrag: function(e) {

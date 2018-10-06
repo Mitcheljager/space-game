@@ -25,7 +25,6 @@
           if (this.openOnCreate) {
             this.$parent._data.isMenuActive = false
             this.isActive = !this.isActive
-            console.log(this.$parent)
           } else {
             this.isActive = !this.isActive
           }
@@ -123,6 +122,7 @@
       border-radius: 50%;
       background: blue;
       color: white;
+      font-size: 11px;
       transform: scale(0);
       transition: transform, transform-origin, height, width, opacity;
       transition-duration: $transition-duration;

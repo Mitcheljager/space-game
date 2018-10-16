@@ -1,9 +1,11 @@
 <template>
   <Instance class="instance--current-orbit" :backgrounds="[{ name: 'current-orbit-stars', speed: '0' }]">
+    {{ orbitData }}
+    
     <div class="orbit">
       <div class="orbit__primary"></div>
 
-      <div class="orbit_orbital" @click="openOrbital('station')"></div>
+      <div class="orbit__orbital" @click="openOrbital('Station')"></div>
     </div>
   </Instance>
 </template>
@@ -17,7 +19,7 @@
     },
     data: function () {
       return {
-
+        orbitData: ""
       }
     },
     methods: {
@@ -56,7 +58,7 @@
     transform: translateX(-50%) translateY(-50%);
   }
 
-  .orbit_orbital {
+  .orbit__orbital {
     position: absolute;
     left: -25px;
     top: -25px;

@@ -108,7 +108,7 @@
         this.isActive = false
         this.isMenuActive = false
 
-        this.$nextTick( function () {
+        this.$nextTick(function () {
           this.renderMarkers()
         })
       },

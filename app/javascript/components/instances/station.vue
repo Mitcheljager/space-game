@@ -1,8 +1,8 @@
 <template>
   <Instance class="instance--station" ref="instance-station" :backgrounds="
     [
-      { name: 'station-stars', speed: '0' },
-      { name: 'station-earth', speed: '2' }
+      { name: 'station-stars', speed: 0, backgroundSpeed: 0.25 },
+      { name: 'station-earth', speed: 2, backgroundSpeed: 0.25 }
     ]
   ">
     <AddUnit slot="interface"></AddUnit>
@@ -100,9 +100,8 @@
   }
 </script>
 
-<style lang="scss">
-  $unit-height: 100px;
-  $unit-width: 50px;
+<style lang="scss" scoped>
+  @import "../../style/variables_mixins";
 
   .instance--station {
     display: grid;
@@ -111,15 +110,16 @@
     padding: 100px 100px;
     place-items: center;
 
-    .instance__background--station-stars {
-      background: url("https://s6.postimg.cc/unjz87dz5/grd.png");
+    /deep/ .instance__background--station-stars {
+      background-color: #25182C;
+      @include pixel-modifier-background("../../images/bg_milkyway_main_[modifier]x.jpg");
     }
 
-    .instance__background--station-earth {
+    /deep/ .instance__background--station-earth {
       left: 70vw;
       top: 20vh;
-      height: 200px;
-      width: 200px;
+      height: 450px;
+      width: 450px;
       border-radius: 50%;
       background: blue;
     }
@@ -132,9 +132,9 @@
 
     &--right-side {
       position: absolute;
-      margin-left: $unit-width;
+      margin-left: pixel-modifier($unit-width);
 
-      .station-wing {
+      /deep/ .station-wing {
         @for $i from 1 through 10 {
           &:nth-child(#{$i}) {
             z-index: (10 - $i);
@@ -145,23 +145,23 @@
 
     &--left-side {
       position: absolute;
-      margin-right: $unit-width;
+      margin-right: pixel-modifier($unit-width);
       transform: translateX(-100%);
     }
 
     &--top-side {
       position: absolute;
       flex-direction: column;
-      margin-left: $unit-width / 2;
-      margin-bottom: $unit-height / 2;
+      margin-left: pixel-modifier($unit-width / 2);
+      margin-bottom: pixel-modifier($unit-height / 2);
       transform: translateY(-100%);
     }
 
     &--bottom-side {
       position: absolute;
       flex-direction: column;
-      margin-left: $unit-width / 2;
-      margin-top: $unit-height / 2;
+      margin-left: pixel-modifier($unit-width / 2);
+      margin-top: pixel-modifier($unit-height / 2);
     }
   }
 </style>

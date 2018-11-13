@@ -34,9 +34,9 @@
 </script>
 
 <style lang="scss">
-  $bubble-size: 40px;
+  $bubble-size: 45px;
   $bubbles-max: 6;
-  $y-offset: 65px;
+  $y-offset: 75px;
   $bubble-spacing: 360 / $bubbles-max;
   $transition-duration: 300ms;
 
@@ -120,7 +120,7 @@
       height: $bubble-size;
       opacity: 0;
       border-radius: 50%;
-      background: blue;
+      background: url("../../images/interface/bubble_3x.png");;
       color: white;
       font-size: 11px;
       transform: scale(0);

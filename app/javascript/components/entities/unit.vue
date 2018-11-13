@@ -7,6 +7,7 @@
 </template>
 
 <script>
+  import { EventBus } from "../event_bus"
   import Standard from "./units/standard"
   import Cooled from "./units/cooled"
   import Dock from "./units/dock"
@@ -45,27 +46,31 @@
       }
     },
     mounted: function() {
-      if (this.parent_unit && !this.grand_parent_unit) {
-        let initialWidth = this.$el.offsetWidth
-        let initialHeight = this.$el.offsetHeight
-
-        this.$el.style.height = initialWidth + "px"
-        this.$el.style.width = initialHeight + "px"
+      EventBus.$on("pixelModifierChange", this.pixelModifierChangeHandler)
+      this.pixelModifierChangeHandler()
+    },
+    methods: {
+      pixelModifierChangeHandler: function() {
+        this.$nextTick(() => {
+          if (this.parent_unit && !this.grand_parent_unit) {
+            this.$el.style.height = 16 * this.$root.$children[0]._data.pixelModifier + "px"
+            this.$el.style.width = 16 * this.$root.$children[0]._data.pixelModifier * 2 + "px"
+          }
+        })
       }
     }
   }
 </script>
 
-<style lang="scss">
-  $unit-height: 100px;
-  $unit-width: 50px;
+<style lang="scss" scoped>
+  @import "../../style/variables_mixins";
 
   .unit {
     position: relative;
-    height: $unit-height;
-    width: $unit-width;
+    height: pixel-modifier($unit-height);
+    width: pixel-modifier($unit-width);
     padding: 5px;
-    font-size: 12px;
+    font-size: 14px;
     box-shadow: inset 0 0 0 1px gray;
     background: lightgrey;
     z-index: -1;

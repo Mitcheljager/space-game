@@ -1,13 +1,11 @@
 import Vue from "vue"
-import App from "../app"
+import App from "components/app"
 
 document.addEventListener("DOMContentLoaded", function() {
-  const element = document.body;
+  const element = document.body
 
   const app = new Vue({
     el: element,
-    render: h => h(App)
+    render: h => h(App),
   })
-
-  console.log(app);
 });

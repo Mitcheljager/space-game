@@ -1,0 +1,36 @@
+$grid-size: 16px;
+
+$unit-width: $grid-size;
+$unit-height: $unit-width * 2;
+$unit-modifier: 4;
+
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+@function pixel-modifier($value) {
+  @return calc(#{ $value } * var(--pixel-modifier));
+}
+
+@mixin pixel-modifier-background($value) {
+  $breakpoints: (
+    0px,
+    1100px,
+    1600px
+  );
+
+  @for $i from 1 through length($breakpoints) {
+    $breakpoint: nth($breakpoints, $i);
+    $flatValue: str-replace($value, "[modifier]", $i + 1);
+
+    @media (min-width: $breakpoint) {
+      background-image: url(#{$flatValue});
+    }
+  }
+}

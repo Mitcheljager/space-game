@@ -6,7 +6,7 @@
       <slot></slot>
     </div>
 
-    <div :instance-parallax-background="background.speed" :class="['instance__background', `instance__background--${background.name}`]" v-for="background in backgrounds"></div>
+    <div :instance-parallax-background="background.speed" :instance-parallax-background-image="background.backgroundSpeed ? background.backgroundSpeed : 0" :class="['instance__background', `instance__background--${background.name}`]" v-for="background in backgrounds"></div>
   </section>
 </template>
 
@@ -82,7 +82,12 @@
 
         elementsToMove.forEach(function(element) {
           let elementSpeed = element.getAttribute("instance-parallax-background") / 100
+          let elementBackgroundSpeed = element.getAttribute("instance-parallax-background-image") / 100
+
           element.style.transform = `translateY(${ y * elementSpeed }px) translateX(${ x * elementSpeed }px)`
+
+          if (elementBackgroundSpeed)
+            element.style.backgroundPosition = `calc(50% + ${ x * elementBackgroundSpeed }px) calc(50% + ${ y * elementBackgroundSpeed }px)`
         });
       }
     }
@@ -108,5 +113,7 @@
     width: 100vw;
     height: 100vh;
     z-index: -1;
+    background-position: center;
+    background-repeat: no-repeat, repeat;
   }
 </style>

@@ -35,7 +35,7 @@
         let newData = {
           id: `${ Math.floor(Math.random() * 360) }`,
           seed: `${ i }`,
-          planet_id: `${ Math.floor(Math.random() * 9) }`,
+          planet_id: `3`,
           speed: `${ Math.ceil(Math.random() * 19) }`
         }
 
@@ -45,7 +45,8 @@
       return {
         primaryData: "",
         orbitData: "",
-        asteroidData: asteroidDataRng
+        asteroidData: asteroidDataRng,
+        rotationSpeedMultiplier: 1,
       }
     },
     mounted: function() {
@@ -69,16 +70,17 @@
       },
       styleObject: function(orbit) {
         return {
-          transform: `translateX(${ orbit.distance }px) rotate(${ orbit.location }deg)`,
+          transform: `translateX(${ orbit.distance }px) rotate(calc(${ orbit.location }deg + var(--rotation-5))`,
           transformOrigin: `-${ orbit.distance }px center`,
-          zIndex: 10
+          zIndex: 10,
+          transitionDuration: 5 * (1000 / this.rotationSpeedMultiplier) + "ms"
         }
       },
       styleAsteroid: function(asteroid) {
         let distance = new Math.seedrandom(asteroid.seed)
         let rotation = new Math.seedrandom(asteroid.id)
 
-        distance = distance() / (distance() * 10) * 1000 + 250
+        distance = distance() / (distance() * 10) * 1000 + 230
         rotation = 360 * rotation()
 
         return {
@@ -87,7 +89,7 @@
           background: "brown",
           transform: `translateX(${ distance }px) rotate(calc(${ rotation }deg + var(--rotation-${ asteroid.speed })))`,
           transformOrigin: `-${ distance }px center`,
-          transitionDuration: asteroid.speed * 1000 + "ms"
+          transitionDuration: asteroid.speed * (1000 / this.rotationSpeedMultiplier) + "ms"
         }
       },
       stylePrimary: function() {
@@ -113,7 +115,7 @@
               degree = degree - 1
               element.style.setProperty(`--rotation-${ i }`, `${ degree }deg`)
             }
-          }, i * 1000)
+          }, i * (1000 / this.rotationSpeedMultiplier))
         }
       },
       toggleFloatingMenu: function(orbit) {
@@ -133,7 +135,7 @@
 
 <style lang="scss">
   @import "../../style/variables_mixins";
-  
+
   .instance--current-orbit {
     .instance__background--current-orbit-stars {
       background-color: #25182C;
@@ -158,8 +160,6 @@
     position: relative;
     border-radius: 50%;
     background: blue;
-    top: -20px;
-    left: -20px;
     transform: translateX(-50%) translateY(-50%);
 
     &::before {
@@ -177,8 +177,8 @@
 
   .orbit__orbital {
     position: absolute;
-    left: -25px;
-    top: -25px;
+    left: 0;
+    top: -10px;
     width: 50px;
     height: 50px;
     background: green;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    Node
+    Vegitation
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 
   export default {
     components: {
-      
+
     },
     data: function() {
       return {
@@ -22,11 +22,14 @@
     },
     methods: {
       pixelModifierChangeHandler: function() {
+
       }
     }
   }
 </script>
 
 <style lang="scss">
-  @import "../../../style/variables_mixins";
+  .module--vegitation {
+    background: green;
+  }
 </style>

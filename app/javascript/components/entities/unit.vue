@@ -1,6 +1,5 @@
 <template>
   <section :class="`unit unit--${ unit.type }`" @mouseover="menuActive = !menuActive" @mouseout="menuActive = !menuActive">
-    <small><em>{{ unit.id }}</em></small>
 
     <component :is="unit.type"></component>
   </section>
@@ -54,7 +53,7 @@
         this.$nextTick(() => {
           if (this.parent_unit && !this.grand_parent_unit) {
             this.$el.style.height = 16 * this.$root.$children[0]._data.pixelModifier + "px"
-            this.$el.style.width = 16 * this.$root.$children[0]._data.pixelModifier * 2 + "px"
+            this.$el.style.width = 16 * this.$root.$children[0]._data.pixelModifier * 1.5 + "px"
           }
         })
       }
@@ -65,6 +64,11 @@
 <style lang="scss" scoped>
   @import "../../style/variables_mixins";
 
+  $unit-types: (
+    standard,
+    windows
+  );
+
   .unit {
     position: relative;
     height: pixel-modifier($unit-height);
@@ -72,7 +76,26 @@
     padding: 5px;
     font-size: 14px;
     box-shadow: inset 0 0 0 1px gray;
-    background: lightgrey;
+    background-color: lightgrey;
+    background-repeat: no-repeat;
     z-index: -1;
+
+    @each $type in $unit-types {
+      &--#{ $type } {
+        background-color: none;
+        @include pixel-modifier-background("../../images/unit/#{ $type }-[modifier]x.png");
+        @include pixel-modifier-background("../../images/unit/#{ $type }-[modifier]x.png", "mask-image");
+
+        &.unit--horizontal {
+          @include pixel-modifier-background("../../images/unit/#{ $type }_horizontal-[modifier]x.png");
+          @include pixel-modifier-background("../../images/unit/#{ $type }_horizontal-[modifier]x.png", "mask-image");
+        }
+      }
+    }
+  }
+
+  .unit--node {
+    height: pixel-modifier($unit-width);
+    width: pixel-modifier($unit-width);
   }
 </style>

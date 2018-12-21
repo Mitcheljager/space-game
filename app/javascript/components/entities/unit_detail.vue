@@ -53,8 +53,8 @@
       pixelModifierChangeHandler: function() {
         this.$nextTick(() => {
           if (this.parent_unit && !this.grand_parent_unit) {
-            this.$el.style.height = 16 * this.$root.$children[0]._data.pixelModifier * 4 + "px"
-            this.$el.style.width = 16 * this.$root.$children[0]._data.pixelModifier * 8 + "px"
+            this.$el.style.height = 16 * this.$root.$children[0]._data.pixelModifier * 5 + "px"
+            this.$el.style.width = 16 * this.$root.$children[0]._data.pixelModifier * 7.5 + "px"
           }
         })
       }
@@ -74,5 +74,10 @@
     box-shadow: inset 0 0 0 1px gray;
     background: lightgrey;
     z-index: -1;
+  }
+
+  .unit--node {
+    height: pixel-modifier($unit-width * $unit-modifier);
+    width: pixel-modifier($unit-width * $unit-modifier);
   }
 </style>

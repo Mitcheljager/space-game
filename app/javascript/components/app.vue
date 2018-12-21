@@ -1,15 +1,18 @@
 <template>
-  <div class="board" :style="`--pixel-modifier: ${ pixelModifier }`">
+  <div :class="`board pixel-modifier--${ pixelModifier }`" :style="`--pixel-modifier: ${ pixelModifier }`">
     <div class="main-interface">
       <div @click="activeInstance = 'SolarSystem'">Solar System</div>
       <div @click="activeInstance = 'CurrentOrbit'">Orbit</div>
       <div @click="activeInstance = 'Station'">Station</div>
+      <div @click="activeInstance = 'StationDetail'">Station Detail</div>
     </div>
 
-    <Station v-if="activeInstance == 'Station'"></Station>
-    <StationDetail v-if="activeInstance == 'StationDetail'"></StationDetail>
-    <CurrentOrbit v-if="activeInstance == 'CurrentOrbit'"></CurrentOrbit>
-    <SolarSystem v-if="activeInstance == 'SolarSystem'"></SolarSystem>
+    <div class="zoom-interface">
+      <div @click="changePixelModifier(-1)">-</div>
+      <div @click="changePixelModifier(1)">+</div>
+    </div>
+
+    <div v-bind:is="activeInstance" :class="activeInstance" ref="instance"></div>
   </div>
 </template>
 
@@ -29,8 +32,8 @@
     },
     data: function () {
       return {
-        activeInstance: "StationDetail",
-        pixelModifier: 1
+        activeInstance: "SolarSystem",
+        pixelModifier: 2
       }
     },
     mounted() {
@@ -42,16 +45,27 @@
       setPixelModifier: function() {
         const element = this.$el
         let windowWidth = document.documentElement.clientWidth
+        let newPixelModifier = 2
 
-        if (windowWidth < 1099) {
-          this.pixelModifier = 2
-        } else if (windowWidth > 1100 && windowWidth < 1599) {
-          this.pixelModifier = 3
+        if (windowWidth > 1100 && windowWidth < 1599) {
+          newPixelModifier = 3
         } else if (windowWidth > 1600) {
-          this.pixelModifier = 4
+          newPixelModifier = 4
         }
-        
-        EventBus.$emit("pixelModifierChange")
+
+        if (newPixelModifier != this.pixelModifier) {
+          this.pixelModifier = newPixelModifier
+          EventBus.$emit("pixelModifierChange")
+        }
+      },
+      changePixelModifier: function(modifier) {
+        if (this.pixelModifier + modifier > 1 && this.pixelModifier + modifier < 5) {
+          this.pixelModifier += modifier
+          this.$el.style["--pixel-modifier"] = this.pixelModifier
+
+
+          EventBus.$emit("pixelModifierChange")
+        }
       }
     }
   }
@@ -85,6 +99,25 @@
     z-index: 10;
     color: white;
     text-shadow: 1px 1px 0 rgba(black, .5), -1px -1px 0 rgba(black, .5), -1px 1px 0 rgba(black, .5), 1px -1px 0 rgba(black, .5);
+  }
+
+  .zoom-interface {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    font-size: 28px;
+    z-index: 10;
+    color: white;
+    text-shadow: 1px 1px 0 rgba(black, .5), -1px -1px 0 rgba(black, .5), -1px 1px 0 rgba(black, .5), 1px -1px 0 rgba(black, .5);
+
+    div {
+      display: block;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+    }
   }
 
   .temp-interface {

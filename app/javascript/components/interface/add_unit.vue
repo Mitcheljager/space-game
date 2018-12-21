@@ -184,13 +184,13 @@
     background: red;
   }
 
-  $marker-size: 10px;
+  $marker-size: calc(var(--pixel-modifier) * 2px);
 
   .add-unit-marker {
     position: absolute;
     width: 100%;
     height: $marker-size;
-    background: rgba(blue, .2);
+    background: rgba(blue, .1);
     top: 0;
     left: 0;
 
